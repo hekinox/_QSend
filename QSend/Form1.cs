@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 
@@ -15,7 +16,10 @@ namespace QSend
         }
 
         DataClient handshakeClient;
+        Gatherer gatherer;
         private MemoryStream responseStream = new MemoryStream();
+
+        int nOfStreams = 4;
 
         private void handleTransferHeader(object sender, ProgressChangedEventArgs e, int index)
         {
@@ -45,10 +49,17 @@ namespace QSend
             }
         }
 
-
+        int streamsCompleted = 0;
         private void handleTransferChunk(object sender, ProgressChangedEventArgs e, int index)
         {
-            
+            if (e.ProgressPercentage == 100)
+                streamsCompleted++;
+
+            if (streamsCompleted == nOfStreams)
+            {
+                gatherer.assembleChunks();
+                streamsCompleted = 0;
+            }
         }
 
         List<DataClient> fileClients;
@@ -56,13 +67,12 @@ namespace QSend
         {
             fileClients = new List<DataClient>();
 
-            Gatherer gatherer = new Gatherer(header);
+            gatherer = new Gatherer(header);
 
             for (int i = 0; i < header.nOfStreams; i++)
             {
                 fileClients.Add(new DataClient(i+1, 2700 + i + 1, new FileStream("chunk" + i.ToString() + ".txt", FileMode.Create), handleTransferChunk, false));
                 
-                //fileClients[i].sendData(header.sourceIp, 2700 + i + 1, Encoding.ASCII.GetBytes("Hello"));
                 fileClients[i].sendData(header.sourceIp, 2700 + i + 1, gatherer.getNextChunk());
             }
         }
@@ -70,12 +80,17 @@ namespace QSend
 
         private void Form1_Load(object sender, EventArgs e)
         {
+
+            // handshakeClient (receiver)
             handshakeClient = new DataClient(0, 2700, responseStream, handleTransferHeader, true);
+            
+            // sending part
             string filePath = "testfile.rar";
-            int nOfStreams = 4;
+            
 
             TransferHeader transferHeader = new TransferHeader(filePath, nOfStreams);
             
+            // same handshakeClient used to send file
             handshakeClient.sendData("127.0.0.1", 2700, Util.serialize(transferHeader));
 
 
