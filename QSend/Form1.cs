@@ -1,14 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 
@@ -63,11 +56,14 @@ namespace QSend
         {
             fileClients = new List<DataClient>();
 
+            Gatherer gatherer = new Gatherer(header);
+
             for (int i = 0; i < header.nOfStreams; i++)
             {
-                fileClients.Add(new DataClient(i+1, 2700 + i + 1, new FileStream("ceva"+i.ToString() + ".txt", FileMode.Create), handleTransferChunk, false));
-                fileClients[i].sendData(header.sourceIp, 2700 + i + 1, Encoding.ASCII.GetBytes("Hello"));
+                fileClients.Add(new DataClient(i+1, 2700 + i + 1, new FileStream("chunk" + i.ToString() + ".txt", FileMode.Create), handleTransferChunk, false));
                 
+                //fileClients[i].sendData(header.sourceIp, 2700 + i + 1, Encoding.ASCII.GetBytes("Hello"));
+                fileClients[i].sendData(header.sourceIp, 2700 + i + 1, gatherer.getNextChunk());
             }
         }
 
@@ -75,7 +71,7 @@ namespace QSend
         private void Form1_Load(object sender, EventArgs e)
         {
             handshakeClient = new DataClient(0, 2700, responseStream, handleTransferHeader, true);
-            string filePath = "ceva.txt";
+            string filePath = "testfile.rar";
             int nOfStreams = 4;
 
             TransferHeader transferHeader = new TransferHeader(filePath, nOfStreams);

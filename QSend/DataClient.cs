@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace QSend
 {
@@ -86,8 +82,13 @@ namespace QSend
             client.Connect(destEndPoint);
 
             NetworkStream ns = client.GetStream();
-            ns.Write(buffer, 0, buffer.Length);
 
+            int size = buffer.Length;
+            while (size > 0)
+            {
+                ns.Write(buffer, 0, 2048 > size ? size : 2048);
+                size -= 2048;
+            }
             ns.Flush();
             ns.Close();
             client.Close();
