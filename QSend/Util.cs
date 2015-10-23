@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace QSend
 {
@@ -29,7 +25,7 @@ namespace QSend
     class TransferHeader
     {
         public string fileName { get; set; }
-        public double fileSize { get; set; }
+        public Int64 fileSize { get; set; }
         public string sourceIp { get; set; }
         public int nOfStreams { get; set; }
 
@@ -38,7 +34,7 @@ namespace QSend
         public TransferHeader(string path, int nOfStreams)
         {
             this.fileName = Path.GetFileName(path);
-            this.fileSize = new FileInfo(path).Length;
+            this.fileSize = (int)new FileInfo(path).Length;
             this.sourceIp = Util.getExternalIP();
             this.nOfStreams = nOfStreams;
 
