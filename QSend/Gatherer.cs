@@ -14,7 +14,7 @@ namespace QSend
         public Gatherer(TransferHeader header)
         {
             this.header = header;
-            inputStream = new FileStream(header.fileName, FileMode.Open);
+            inputStream = new FileStream(header.filePath, FileMode.Open);
 
             chunkSize = 1 + header.fileSize / header.nOfStreams;
             

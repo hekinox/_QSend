@@ -67,7 +67,6 @@ namespace QSend
                 // status unknown
                 
                 worker1.ReportProgress(100, TransferStatus.COMPLETE);
-                Debug.WriteLine(keepStreamAlive);
             }
         }
 
@@ -86,11 +85,13 @@ namespace QSend
 
             NetworkStream ns = client.GetStream();
 
+            int _currentIndex = 0;
             int size = buffer.Length;
             while (size > 0)
             {
-                ns.Write(buffer, 0, 2048 > size ? size : 2048);
+                ns.Write(buffer, _currentIndex, 2048 > size ? size : 2048);
                 size -= 2048;
+                _currentIndex += 2048;
             }
             ns.Flush();
             ns.Close();
@@ -105,8 +106,8 @@ namespace QSend
             List<object> args = new List<object>();
             args.Add(ip);
             args.Add(port);
-            args.Add(buffer);
-
+            args.Add(buffer); // correct value here
+            
             worker2 = new BackgroundWorker();
             worker2.WorkerReportsProgress = true;
             worker2.WorkerSupportsCancellation = true;

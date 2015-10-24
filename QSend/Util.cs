@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -28,11 +29,13 @@ namespace QSend
         public Int64 fileSize { get; set; }
         public string sourceIp { get; set; }
         public int nOfStreams { get; set; }
+        public string filePath { get; set; }
 
         public int transferPermission { get; set; }
 
         public TransferHeader(string path, int nOfStreams)
         {
+            this.filePath = path;
             this.fileName = Path.GetFileName(path);
             this.fileSize = (int)new FileInfo(path).Length;
             this.sourceIp = Util.getExternalIP();
