@@ -8,9 +8,9 @@ using System.Windows.Forms;
 
 namespace QSend
 {
-    public partial class Form1 : Form
+    public partial class MainWnd : Form
     {
-        public Form1()
+        public MainWnd()
         {
             InitializeComponent();
         }
@@ -79,36 +79,34 @@ namespace QSend
         }
 
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void MainWnd_Load(object sender, EventArgs e)
         {
+            
 
             // handshakeClient (receiver)
             handshakeClient = new DataClient(0, 2700, responseStream, handleTransferHeader, true);
-            
-            // sending part
-            string filePath = "testfile.avi";
-            
 
-            TransferHeader transferHeader = new TransferHeader(filePath, nOfStreams);
-            
-            // same handshakeClient used to send file
-            handshakeClient.sendData("127.0.0.1", 2700, Util.serialize(transferHeader));
+            ipTextBox.Text = "127.0.0.1";
 
-
-
-
-            // <-- SEND / RECEIVE FILE --> 
-
-            //FileStream sw = File.OpenWrite("ceva.txt");
-
-            //DataClient client = new DataClient(2700, sw);
-            //byte[] b = Encoding.ASCII.GetBytes("Hello");
-
-            //client.sendData("127.0.0.1", 2700, b);
 
 
         }
 
+        private void selectFileButton_Click(object sender, EventArgs e)
+        {
+            FileDialog fileDialog = new OpenFileDialog();
+            DialogResult result = fileDialog.ShowDialog();
 
+            if (result == DialogResult.OK)
+            {
+                TransferHeader transferHeader = new TransferHeader(fileDialog.FileName, nOfStreams);
+
+                handshakeClient.sendData(ipTextBox.Text, 2700, Util.serialize(transferHeader));
+            }
+        }
+
+
+
+        
     }
 }
