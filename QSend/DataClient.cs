@@ -35,8 +35,8 @@ namespace QSend
             worker1.WorkerReportsProgress = true;
             worker1.DoWork += acceptClient;
             worker1.ProgressChanged += (sender, e) => updateTransferStatus(sender, e, index); 
-            worker1.RunWorkerAsync();
-                       
+            
+            worker1.RunWorkerAsync();       
         }
 
         void acceptClient(object sender, DoWorkEventArgs e)
