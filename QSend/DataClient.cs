@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -64,7 +65,9 @@ namespace QSend
                 if (!keepStreamAlive)
                     outputStream.Close();
                 // status unknown
+                
                 worker1.ReportProgress(100, TransferStatus.COMPLETE);
+                Debug.WriteLine(keepStreamAlive);
             }
         }
 

@@ -48,7 +48,14 @@ namespace QSend
 
         private void handleTransferChunk(object sender, ProgressChangedEventArgs e, int index)
         {
-            
+            if (e.ProgressPercentage == 100)
+                streamsCompleted++;
+
+            if (streamsCompleted == nOfStreams)
+            {
+                gatherer.assembleChunks();
+                streamsCompleted = 0;
+            }
         }
 
         List<DataClient> fileClients;
@@ -71,24 +78,12 @@ namespace QSend
         private void Form1_Load(object sender, EventArgs e)
         {
             handshakeClient = new DataClient(0, 2700, responseStream, handleTransferHeader, true);
-            string filePath = "testfile.rar";
+            string filePath = "testfile.zip.txt";
             int nOfStreams = 4;
 
             TransferHeader transferHeader = new TransferHeader(filePath, nOfStreams);
             
             handshakeClient.sendData("127.0.0.1", 2700, Util.serialize(transferHeader));
-
-
-
-
-            // <-- SEND / RECEIVE FILE --> 
-
-            //FileStream sw = File.OpenWrite("ceva.txt");
-
-            //DataClient client = new DataClient(2700, sw);
-            //byte[] b = Encoding.ASCII.GetBytes("Hello");
-
-            //client.sendData("127.0.0.1", 2700, b);
 
 
         }
