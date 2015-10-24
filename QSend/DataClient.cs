@@ -63,7 +63,9 @@ namespace QSend
                 }
 
                 if (!keepStreamAlive)
+                {
                     outputStream.Close();
+                }
                 // status unknown
                 
                 worker1.ReportProgress(100, TransferStatus.COMPLETE);
