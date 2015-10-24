@@ -85,7 +85,7 @@ namespace QSend
             handshakeClient = new DataClient(0, 2700, responseStream, handleTransferHeader, true);
             
             // sending part
-            string filePath = "testfile.zip.txt";
+            string filePath = "testfile.avi";
             
 
             TransferHeader transferHeader = new TransferHeader(filePath, nOfStreams);
