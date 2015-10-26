@@ -1,12 +1,13 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Runtime.Serialization.Formatters.Binary;
 
 namespace QSend
 {
-
+    /// <summary>
+    /// Transfer permissions
+    /// </summary>
     class TransferPermission
     {
         public const int ACCEPTED = 1;
@@ -14,6 +15,9 @@ namespace QSend
         public const int UNKNOWN = -1;
     }
 
+    /// <summary>
+    /// Possible states of the transfer
+    /// </summary>
     class TransferStatus
     {
         public const int WFCLIENT = 0;
