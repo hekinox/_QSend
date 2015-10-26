@@ -22,6 +22,9 @@ namespace QSend
         public const int COMPLETE = 3;
     }
 
+    /// <summary>
+    /// Contains file & transport information; an object is serialized and sent between clients
+    /// </summary>
     [Serializable]
     class TransferHeader
     {
@@ -46,11 +49,12 @@ namespace QSend
 
     }
 
+    /// <summary>
+    /// Contains mostly static methods for general purpose.
+    /// </summary>
     class Util
     {
         private static BinaryFormatter binaryFormatter = new BinaryFormatter();
-
-
 
         public static string getExternalIP()
         {
@@ -60,7 +64,11 @@ namespace QSend
             }
         }
 
-
+        /// <summary>
+        /// Serializes the object
+        /// </summary>
+        /// <param name="obj">object to serialize</param>
+        /// <returns>object as byte array</returns>
         public static byte[] serialize(object obj)
         {
             MemoryStream serializationStream = new MemoryStream();
@@ -68,6 +76,11 @@ namespace QSend
             return serializationStream.ToArray();
         }
 
+        /// <summary>
+        /// Deserializes object
+        /// </summary>
+        /// <param name="serializationStream">a stream containing the serialized object</param>
+        /// <returns>object deserialized</returns>
         public static object deserialize(Stream serializationStream)
         {
             serializationStream.Position = 0;
