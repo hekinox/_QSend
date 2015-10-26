@@ -1,9 +1,11 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 
 namespace QSend
 {
+    /// <summary>
+    /// Handles chunk reading & writing (from files).
+    /// </summary>
     class Gatherer
     {
         private TransferHeader header;
@@ -13,6 +15,10 @@ namespace QSend
 
         private int _streamsRead = 0;
 
+        /// <summary>
+        /// Creates a new Gatherer
+        /// </summary>
+        /// <param name="header">header structure transfered between handhshaking clients</param>
         public Gatherer(TransferHeader header)
         {
             this.header = header;
@@ -22,6 +28,10 @@ namespace QSend
             _streamsRead = 0;   
         }
 
+        /// <summary>
+        /// gets the next chunk, from the file, available for sending
+        /// </summary>
+        /// <returns>a byte array containing the chunk of data</returns>
         public byte[] getNextChunk()
         {
             byte[] buffer = new byte[chunkSize];
@@ -36,6 +46,10 @@ namespace QSend
         }
 
         // to do: move in a background worker thread
+
+        /// <summary>
+        /// assembles all current received chunks back into one file
+        /// </summary>
         public void assembleChunks()
         {
             FileStream outputStream = new FileStream("[RECV]" + header.fileName, FileMode.Create);

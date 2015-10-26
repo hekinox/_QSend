@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -23,6 +22,14 @@ namespace QSend
         // client thread (send)
         BackgroundWorker worker2;
 
+        /// <summary>
+        /// Creates a new DataClient that acts as a TcpListener & TcpClient
+        /// </summary>
+        /// <param name="index">index of the current client (for identification)</param>
+        /// <param name="port">port used</param>
+        /// <param name="outputStream">the stream used to return any data received</param>
+        /// <param name="updateTransferStatus">eventhandler for transfer status</param>
+        /// <param name="keepStreamAlive">indicates if the stream should be closed or not after receiving data</param>
         public DataClient(int index, int port, Stream outputStream, Action<object, ProgressChangedEventArgs, int> updateTransferStatus, bool keepStreamAlive)
         {
             this.ipEndPoint = new IPEndPoint(IPAddress.Any, port);
@@ -39,7 +46,7 @@ namespace QSend
             worker1.RunWorkerAsync();       
         }
 
-        void acceptClient(object sender, DoWorkEventArgs e)
+        private void acceptClient(object sender, DoWorkEventArgs e)
         {
      	    while (true)
             {
@@ -103,6 +110,12 @@ namespace QSend
             
         }
 
+        /// <summary>
+        /// Sends data via TCP to the client
+        /// </summary>
+        /// <param name="ip">ip address</param>
+        /// <param name="port">used port</param>
+        /// <param name="buffer">data as byte array</param>
         public void sendData(string ip, int port, byte[] buffer)
         {
             List<object> args = new List<object>();
