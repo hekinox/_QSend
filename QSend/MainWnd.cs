@@ -16,6 +16,15 @@ namespace QSend
             InitializeComponent();
         }
 
+        [DllImportAttribute("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int LPAR);
+        [DllImportAttribute("user32.dll")]
+        public static extern bool ReleaseCapture();
+
+        const int WM_NCLBUTTONDOWN = 0xA1;
+        const int HT_CAPTION = 0x2;
+
+
         DataClient handshakeClient;
         Gatherer gatherer;
         private MemoryStream responseStream = new MemoryStream();
@@ -28,7 +37,7 @@ namespace QSend
             {
                 TransferHeader header1 = (TransferHeader)(Util.deserialize(responseStream));
 
-                // fie primeste un header pt permisiune fie primeste inapoi headerul cu tot cu permisiune
+                // either receives a header asking for permission either receives back the same header
 
                 if (header1.transferPermission == TransferPermission.REJECTED)
                     return;
@@ -117,15 +126,6 @@ namespace QSend
             this.Close();
         }
 
-
-
-        [DllImportAttribute("user32.dll")]
-        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int LPAR);
-        [DllImportAttribute("user32.dll")]
-        public static extern bool ReleaseCapture();
-
-        const int WM_NCLBUTTONDOWN = 0xA1;
-        const int HT_CAPTION = 0x2;
 
         private void moveWindow(object sender, MouseEventArgs e)
         {
